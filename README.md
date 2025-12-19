@@ -16,32 +16,33 @@ Bir havayolu operasyonunu uçtan uca izlemek için tasarlanmış ilişkisel veri
 
 ## Tablo Açıklamaları
 
-| Tablo Adı | Açıklama |
-|---------|----------|
-| Airlines | Havayolu şirketi bilgilerini tutar (airline_id, name, country). |
-| Airports | Kalkış ve varış havalimanı bilgileri (airport_id, name, city, country). |
-| Airplanes | Havayoluna ait uçak bilgileri (airplane_id, model, capacity, airline_id). |
-| Flights | Uçuş (sefer) bilgileri (flight_id, flight_number, departure_time, arrival_time, airplane_id, departure_airport_id, arrival_airport_id). |
-| Passengers | Yolcu bilgileri (passenger_id, name, surname, passport_number – UNIQUE). |
-| Members | Sisteme üye olan yolcuların bilgileri ve puanları (member_id, first_name, last_name, phone_no, email, points). |
-| MemberPointsTransactions | Üyelerin puan kazanma ve harcama hareketlerini tutar (txn_id, member_id, txn_time, txn_type, points, description). |
-| FarePackages | Bilet paketleri bilgileri (package_id, package_name, baggage_allowance_kg, seat_selection_policy). |
-| FareRefundRules | Paketlere ait iade kurallarını tutar (rule_id, package_id, hours_before_departure, refund_percent). |
-| Seats | Uçak koltuk düzenleri (seat_id, airplane_id, seat_number, seat_class, is_window). |
-| Tickets | Satın alınan bilet bilgileri (ticket_id, pnr, booking_time, flight_id, passenger_id, seat_id, package_id, member_id, price_paid, ticket_status). |
-| Reservations | Ön rezervasyon bilgileri (reservation_id, passenger_id, flight_id, reservation_date, status). |
-| Payments | Bilet ödemelerine ait bilgiler (payment_id, ticket_id, payment_date, amount, payment_method, status). |
-| Baggage | Yolcu bagaj bilgileri (baggage_id, ticket_id, weight, baggage_type). |
-| ExtraBaggagePurchases | Paket limitini aşan ek bagaj satın alma kayıtları (extra_id, ticket_id, extra_kg, price, purchased_at). |
-| Flight_Status | Uçuşun zaman içindeki durum bilgileri (status_id, flight_id, status, delay_minutes, reason, updated_at). |
-| Crew | Mürettebat bilgileri (crew_id, name, surname, role, experience_years, airline_id). |
-| Flight_Crew | Uçuş–Mürettebat çoktan çoğa ilişki tablosu (flight_id, crew_id). |
-| Maintenance | Uçak bakım kayıtları (maintenance_id, airplane_id, maintenance_date, description, technician_name). |
-| Cancelled_Tickets | İptal edilen biletler ve iade tutarları (cancel_id, ticket_id, refund_amount, cancelled_at). |
-| CheckIns | Online check-in bilgileri (checkin_id, ticket_id, checkin_time, status). |
-| BoardingPasses | Check-in sonrası üretilen biniş kartları (boarding_pass_id, ticket_id, issued_at, token). |
-| PromoCodes | İndirim kodları bilgileri (promo_id, code, discount_percent, valid_from, valid_to, min_amount). |
-| TicketPromoUsage | Bir bilette kullanılan promosyon kodu kayıtları (usage_id, ticket_id, promo_id, used_at). |
+| İlişki | Tip | Açıklama |
+|---|---:|---|
+| Airline → Airplane | 1 → N | One airline operates multiple airplanes. |
+| Airline → Crew | 1 → N | One airline employs many crew members. |
+| Airplane → Flight | 1 → N | One airplane can operate many flights (over time). |
+| Airplane → Seat | 1 → N | One airplane contains many seats. |
+| Airplane → Maintenance | 1 → N | One airplane has many maintenance records. |
+| Flight → Airport (Departs_From) | N → 1 | Many flights depart from one airport. |
+| Flight → Airport (Arrives_At) | N → 1 | Many flights arrive at one airport. |
+| Flight → Ticket | 1 → N | One flight can have many tickets sold. |
+| Passenger → Ticket | 1 → N | One passenger can purchase many tickets. |
+| Member → Ticket | 1 → N (optional on Ticket) | A ticket may belong to a member; a member can have many tickets. |
+| Member → MemberPointsTransactions | 1 → N | One member has many points transactions. |
+| FarePackage → Ticket | 1 → N | One package can be used by many tickets; each ticket uses exactly one package. |
+| FarePackage → FareRefundRules | 1 → N | Each package can define multiple refund rules. |
+| Seat → Ticket | 1 → N (flight+seat unique) | Seats can be assigned to tickets; double booking is prevented by unique (flight_id, seat_id). |
+| Passenger → Reservation | 1 → N | One passenger can create many reservations. |
+| Flight → Reservation | 1 → N | One flight can have many reservations. |
+| Ticket → Payment | 1 → N | One ticket can have multiple payment records (paid/refund attempts). |
+| Ticket → Baggage | 1 → N | One ticket can have multiple baggage records. |
+| Ticket → ExtraBaggagePurchases | 1 → N | One ticket can have multiple extra baggage purchases. |
+| Ticket → Cancelled_Tickets | 1 → 0..1 | A ticket may be cancelled; if cancelled it has one cancellation record. |
+| Ticket → CheckIns | 1 → 0..1 | A ticket may have one online check-in record. |
+| Ticket → BoardingPasses | 1 → 0..1 | A ticket may have one boarding pass. |
+| Flight → Flight_Status | 1 → N | One flight can have many status history records. |
+| PromoCodes → TicketPromoUsage | 1 → N | A promo code can be used in many ticket usages. |
+| Ticket → TicketPromoUsage | 1 → 0..1 | A ticket may use at most one promo code (one usage record). |
 
 
 ## Tablolar Arası İlişkiler
