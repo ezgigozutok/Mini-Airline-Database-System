@@ -66,3 +66,95 @@ Bir havayolu operasyonunu uçtan uca izlemek için tasarlanmış ilişkisel veri
 | FarePackage → FareRefundRules | 1 → N | Her paket için birden fazla iade kuralı tanımlanabilir. |
 | Ticket → CheckIn | 1 → 1 | Her bilet için yalnızca bir online check-in yapılabilir. |
 | Ticket → BoardingPass | 1 → 1 | Her bilet için tek bir biniş kartı üretilir. |
+
+## 🧑‍💼 Kullanıcı Rolleri
+
+Sistem aşağıdaki kullanıcı rollerini destekleyecek şekilde tasarlanmıştır:
+- Misafir Yolcu (Guest)
+- Üye Yolcu (Member)
+- Check-in Görevlisi
+- Operasyon Personeli
+- Bakım Teknisyeni
+- Finans Personeli
+- Sistem Yöneticisi (Admin)
+
+Detaylı rol–gereksinim eşlemesi için:
+📄 `database/04_role_requirements.md`
+
+## ⚙️ Stored Procedures
+
+Proje kapsamında aşağıdaki stored procedure’lar geliştirilmiştir:
+
+- **sp_CancelTicketAndRefund**
+  - Bilet iptali
+  - Paket bazlı iade oranı hesaplama
+  - İade kaydı oluşturma
+  - Transaction yönetimi
+
+- **sp_BookTicket**
+  - Bilet satın alma işlemi
+  - Ticket + Payment işlemlerini tek transaction içinde yürütme
+
+- **sp_AddMemberPoints**
+  - Üyelere puan ekleme
+  - Puan hareketlerini kayıt altına alma (audit)
+
+📄 Detaylar: `database/05_procedures.sql`
+
+
+## 🔁 Triggers
+
+Aşağıdaki trigger’lar sistemin otomatik çalışmasını sağlar:
+
+- **tr_CheckIn_CreateBoardingPass**
+  - Online check-in sonrası otomatik boarding pass üretir
+
+- **tr_FlightStatus_CompensateMembers**
+  - Uçuş gecikmesi veya iptali durumunda
+    üyelere otomatik telafi puanı ekler
+
+📄 Detaylar: `database/06_triggers.sql`
+
+
+## 🔐 Transaction Yönetimi
+
+Bilet satın alma süreci transaction kullanılarak tasarlanmıştır.
+
+- Başarılı senaryo → COMMIT
+- Aynı uçuşta aynı koltuk satılmaya çalışıldığında → ROLLBACK
+
+Bu senaryolar:
+📄 `database/07_transactions_demo.sql`
+dosyasında detaylı olarak gösterilmiştir.
+
+
+## 🧪 Test Queries
+
+Sistemin gereksinimleri karşıladığını göstermek için
+anlamlı test sorguları hazırlanmıştır.
+
+Örnekler:
+- Kalkış–varışa göre uçuş arama
+- Üye bilet ve paket bilgileri
+- Uçuş durum geçmişi
+- Check-in ve boarding pass bilgileri
+- İptal edilen biletler ve iadeler
+
+📄 `database/08_test_queries.sql`
+
+## 🎯 Sonuç
+
+Bu proje ile:
+- Gerçekçi bir havayolu veritabanı tasarlanmış
+- İş kuralları stored procedure ve trigger’lar ile uygulanmış
+- Transaction yönetimi ve test sorguları ile sistemin doğruluğu gösterilmiştir
+
+Proje, **Veritabanı Yönetim Sistemleri** dersi dönem projesi kapsamında hazırlanmıştır.
+
+
+
+
+
+
+
+
