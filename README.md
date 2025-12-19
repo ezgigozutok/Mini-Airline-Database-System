@@ -3,14 +3,14 @@ Bir havayolu operasyonunu uçtan uca izlemek için tasarlanmış ilişkisel veri
 
 ## 📂 Proje Yapısı
 database/
-├ ── 01_schema.sql
-├ ── 02_seed_data.sql
-├ ── 03_procedures.sql
-├ ── 04_triggers.sql
-├ ── 05_transactions_demo.sql
-├ ── 06_test_queries.sql
-├ ── 07_role_requirements.md
-└ ── README.md (opsiyonel – teknik açıklamalar için)
+├── 01_schema.sql
+├── 02_seed_data.sql
+├── 03_procedures.sql
+├── 04_triggers.sql
+├── 05_transactions_demo.sql
+├── 06_test_queries.sql
+├── 07_role_requirements.md
+└── README.md 
 ## Tablo Açıklamaları
 
 | Tablo Adı | Açıklama |
